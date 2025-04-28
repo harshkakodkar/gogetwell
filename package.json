@@ -7,7 +7,6 @@
   "dev": "vite",
   "build": "vite build",
   "preview": "vite preview",
-  "postinstall": "npm install",
   "prettier": "npx prettier src --check",
   "prettier:fix": "npm run prettier -- --write",
   "lint": "eslint . --ext .ts,.tsx",
