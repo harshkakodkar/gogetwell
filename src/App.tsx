@@ -12,15 +12,20 @@ if (appConfig.enableMock) {
 
 function App() {
     return (
-        <Theme>
+        <>
+         <BrowserRouter>  <Views/></BrowserRouter>
+      
+        {/* <Theme>
             <BrowserRouter>
                 <AuthProvider>
                     <Layout>
                         <Views />
+                         
                     </Layout>
                 </AuthProvider>
             </BrowserRouter>
-        </Theme>
+        </Theme> */}
+        </>
     )
 }
 

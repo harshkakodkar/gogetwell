@@ -20,6 +20,7 @@ const Side = ({ children, ...rest }: SideProps) => {
                     src="/img/others/auth-side-bg.png"
                     className="absolute h-full w-full top-0 left-0 rounded-3xl"
                 />
+                
             </div>
         </div>
     )

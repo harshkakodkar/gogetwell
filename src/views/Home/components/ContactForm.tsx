@@ -3,98 +3,93 @@ import { useState } from 'react';
 import { BiPhone, BiSend, BiUser } from 'react-icons/bi';
 import { BsLinkedin, BsTwitter } from 'react-icons/bs';
 import { CgMail } from 'react-icons/cg';
-import { Link } from 'react-router-dom';
 
 const ContactForm = () => {
     const [formState, setFormState] = useState<{
         fullname: string;
         email: string;
         subject: string;
-        message: string
+        message: string;
     }>({
         fullname: '',
         email: '',
         subject: '',
-        message: ''
+        message: '',
     });
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [focused, setFocused] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            setIsSubmitting(true)
-            // await apiContactUs(formState)
-            setIsSubmitting(false)
+            setIsSubmitting(true);
+            // await apiContactUs(formState);
+            setIsSubmitting(false);
             toast.push(
-                <Notification
-                    title={'Success'}
-                    type={'success'}
-                >
+                <Notification title="Success" type="success">
                     Successfully submitted
-                </Notification>,
-            )
+                </Notification>
+            );
             setFormState({
                 fullname: '',
                 email: '',
                 subject: '',
-                message: ''
-            })
-        } catch (err) {
-            setIsSubmitting(false)
+                message: '',
+            });
+        } catch (err: any) {
+            setIsSubmitting(false);
             toast.push(
-                <Notification
-                    title={err?.response?.data.message}
-                    type={'danger'}
-                >
-                    {err?.response?.data.message}
-                </Notification>,
-            )
+                <Notification title={err?.response?.data?.message || 'Error'} type="danger">
+                    {err?.response?.data?.message || 'Something went wrong'}
+                </Notification>
+            );
         }
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormState({
             ...formState,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
     return (
-        <div className="bg-white py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="bg-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            
+
+            <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     {/* Left Column - Contact Info */}
-                    <div className="space-y-8">
+                    <div className="space-y-10">
                         <div>
-                            <h2 className="text-4xl font-bold text-gray-900 mb-4">Let's get in touch!</h2>
-                            <p className="text-gray-600 text-lg">
+                            <h2 className="text-5xl font-bold text-gray-900 mb-6 tracking-tight">Let's get in touch!</h2>
+                            <p className="text-gray-600 text-xl">
                                 Got questions about GoGetWell.AI? Our team is here to help. Contact us for quick and friendly support.
                             </p>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             {/* Contact Details */}
-                            <div className="flex items-center space-x-4">
-                                <div className="bg-purple-100 p-3 rounded-lg">
-                                    <BiPhone className="w-6 h-6 text-primary" />
+                            <div className="flex items-center space-x-6">
+                                <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                                    <BiPhone className="w-8 h-8 text-indigo-600" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-600">Phone</p>
-                                    <a href="tel:+919811396858" className="text-gray-900 hover:text-primary transition-colors">
+                                    <p className="text-gray-500">Phone</p>
+                                    <a href="tel:+919811396858" className="text-gray-900 hover:text-indigo-600 transition-colors text-xl font-medium">
                                         +91 9811396858
                                     </a>
                                 </div>
                             </div>
 
-                            <div className="flex items-center space-x-4">
-                                <div className="bg-purple-100 p-3 rounded-lg">
-                                    <CgMail className="w-6 h-6 text-primary" />
+                            <div className="flex items-center space-x-6">
+                                <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                                    <CgMail className="w-8 h-8 text-indigo-600" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-600">Email</p>
-                                    <a href="mailto:hello@gogetwell.ai" className="text-gray-900 hover:text-primary transition-colors">
+                                    <p className="text-gray-500">Email</p>
+                                    <a href="mailto:hello@gogetwell.ai" className="text-gray-900 hover:text-indigo-600 transition-colors text-xl font-medium">
                                         hello@gogetwell.ai
                                     </a>
                                 </div>
@@ -103,25 +98,39 @@ const ContactForm = () => {
 
                         {/* Social Links */}
                         <div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">Connect With Us</h3>
-                            <div className="flex space-x-4">
-                                <Link to="https://x.com/gogetwellai" target='_blank' className="bg-purple-100 p-3 rounded-lg hover:bg-purple-200 transition-colors">
-                                    <BsTwitter className="w-6 h-6 text-primary" />
-                                </Link>
-                                <Link to="https://www.linkedin.com/company/gogetwellai/" target='_blank' className="bg-purple-100 p-3 rounded-lg hover:bg-purple-200 transition-colors">
-                                    <BsLinkedin className="w-6 h-6 text-primary" />
-                                </Link>
+                            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Connect With Us</h3>
+                            <div className="flex space-x-6">
+                                <a
+                                    href="https://x.com/gogetwellai"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 hover:bg-indigo-100 transition-all"
+                                >
+                                    <BsTwitter className="w-7 h-7 text-indigo-600 hover:text-indigo-700 transition-colors" />
+                                </a>
+                                <a
+                                    href="https://www.linkedin.com/company/gogetwellai/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 hover:bg-indigo-100 transition-all"
+                                >
+                                    <BsLinkedin className="w-7 h-7 text-indigo-600 hover:text-indigo-700 transition-colors" />
+                                </a>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Column - Contact Form */}
-                    <div className="bg-gray-50 rounded-2xl shadow-lg p-4 sm:p-8">
-                        <form onSubmit={handleSubmit} className="space-y-3">
+                    <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl p-8 sm:p-10">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Full Name */}
                             <div className="relative">
-                                <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 ${focused === 'fullName' || formState.fullname ? 'text-primary' : 'text-gray-400'
-                                    }`}>
-                                    <BiUser className="w-5 h-5" />
+                                <div
+                                    className={`absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-300 ${
+                                        focused === 'fullname' || formState.fullname ? 'text-indigo-600' : 'text-gray-400'
+                                    }`}
+                                >
+                                    <BiUser className="w-6 h-6" />
                                 </div>
                                 <input
                                     type="text"
@@ -131,15 +140,19 @@ const ContactForm = () => {
                                     onChange={handleChange}
                                     onFocus={() => setFocused('fullname')}
                                     onBlur={() => setFocused('')}
-                                    className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    className="w-full pl-14 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900 placeholder-gray-400"
                                     required
                                 />
                             </div>
 
+                            {/* Email */}
                             <div className="relative">
-                                <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 ${focused === 'email' || formState.email ? 'text-primary' : 'text-gray-400'
-                                    }`}>
-                                    <CgMail className="w-5 h-5" />
+                                <div
+                                    className={`absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-300 ${
+                                        focused === 'email' || formState.email ? 'text-indigo-600' : 'text-gray-400'
+                                    }`}
+                                >
+                                    <CgMail className="w-6 h-6" />
                                 </div>
                                 <input
                                     type="email"
@@ -149,29 +162,12 @@ const ContactForm = () => {
                                     onChange={handleChange}
                                     onFocus={() => setFocused('email')}
                                     onBlur={() => setFocused('')}
-                                    className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    className="w-full pl-14 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900 placeholder-gray-400"
                                     required
                                 />
                             </div>
 
-                            {/* <div className="relative">
-                                <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 ${focused === 'subject' || formState.subject ? 'text-primary' : 'text-gray-400'
-                                    }`}>
-                                    <BiMessageSquare className="w-5 h-5" />
-                                </div>
-                                <input
-                                    type="text"
-                                    name="subject"
-                                    placeholder="Subject"
-                                    value={formState.subject}
-                                    onChange={handleChange}
-                                    onFocus={() => setFocused('subject')}
-                                    onBlur={() => setFocused('')}
-                                    className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                                    required
-                                />
-                            </div> */}
-
+                            {/* Message */}
                             <div className="relative">
                                 <textarea
                                     name="message"
@@ -180,19 +176,20 @@ const ContactForm = () => {
                                     onChange={handleChange}
                                     onFocus={() => setFocused('message')}
                                     onBlur={() => setFocused('')}
-                                    rows={4}
-                                    className="w-full p-4 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    rows={5}
+                                    className="w-full p-5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900 placeholder-gray-400"
                                     required
                                 />
                             </div>
 
+                            {/* Submit Button */}
                             <Button
                                 loading={isSubmitting}
                                 type="submit"
-                                className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-transparent transition-colors duration-300 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"
+                                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-indigo-500/20"
                             >
-                                <span>Submit</span>
-                                <BiSend className="w-5 h-5" />
+                                <span className="text-lg">Submit</span>
+                                <BiSend className="w-6 h-6" />
                             </Button>
                         </form>
                     </div>
