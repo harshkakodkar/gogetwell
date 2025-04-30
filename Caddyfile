@@ -1,0 +1,12 @@
+{
+    acme_ca https://acme-v02.api.letsencrypt.org/directory
+}
+
+# Wildcard subdomain handling and base domain
+*.localhost, localhost {
+    header {
+        +X-Subdomain {labels.1}
+    }
+
+    reverse_proxy host.docker.internal:5173
+}

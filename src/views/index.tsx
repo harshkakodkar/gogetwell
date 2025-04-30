@@ -11,10 +11,13 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen relative bg-white scroll-smooth">
       <Navbar />
-      <Home />
+      <div id="Home">
+        <Home />
+      </div>
+
       <Solutions />
 
-     
+
       <div id="about-us">
         <Info />
       </div>

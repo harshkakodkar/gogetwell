@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react'
 import aboutUs from '@/assets/images/about_us.gif'
 import mission from '@/assets/images/our_mission.gif'
 import challenges from '@/assets/images/challenges_solve.gif'
+import { useThemeStore } from '@/store/themeStore'
+import { themes } from '@/views/Home/themes/themeLoader'
 
 interface SectionProps {
     img: any
@@ -30,8 +32,44 @@ const Section: React.FC<SectionProps> = ({
     icontitle2,
     iconp2,
 }) => {
+    const { theme } = useThemeStore()
+    const currentTheme = themes[theme]?.colors || {}
+
+    // Theme-based colors
+    const getBackgroundColor = () => {
+        if (theme === 'light') return 'bg-white'
+        if (theme === 'dark') return 'bg-gray-900'
+        return `bg-[${currentTheme.background}]`
+    }
+
+    const getTextColor = () => {
+        return theme === 'light' ? 'text-gray-900' : 'text-white'
+    }
+
+    const getSecondaryTextColor = () => {
+        return theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+    }
+
+    const getCardBackground = () => {
+        if (theme === 'light') return 'bg-white'
+        if (theme === 'dark') return 'bg-gray-800'
+        return `bg-[${currentTheme.cardBackground || currentTheme.background}]`
+    }
+
+    const getBorderColor = () => {
+        if (theme === 'light') return 'border-gray-100'
+        if (theme === 'dark') return 'border-gray-700'
+        return `border-[${currentTheme.border || currentTheme.background}]`
+    }
+
+    const getGradient = () => {
+        if (theme === 'light') return 'from-blue-500 to-purple-500'
+        if (theme === 'dark') return 'from-blue-400 to-purple-400'
+        return currentTheme.gradient || 'from-blue-500 to-purple-500'
+    }
+
     return (
-        <div className={`py-20 ${status === 'left' ? 'bg-white' : 'bg-white'}`}>
+        <div className={`py-20 ${getBackgroundColor()}`}>
             <div className="flex flex-col lg:flex-row gap-12 items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Image Section */}
                 <div className={`w-full lg:w-1/2 ${status === 'right' ? 'lg:order-last' : ''}`}>
@@ -39,61 +77,63 @@ const Section: React.FC<SectionProps> = ({
                         <img
                             src={img}
                             alt={title}
-                            className="w-full object-cover rounded-2xl  transform transition-all duration-500 group-hover:scale-[1.02] max-w-[500px] mx-auto"
+                            className="w-full object-cover rounded-2xl transform transition-all duration-500 group-hover:scale-[1.02] max-w-[500px] mx-auto"
                         />
-
                     </div>
                 </div>
 
                 {/* Content Section */}
                 <div className={`w-full lg:w-1/2 ${status === 'right' ? 'lg:pr-12' : 'lg:pl-12'}`}>
                     <div className="mb-8">
-                        <h2 className="text-4xl font-bold text-gray-900 mb-3">
+                        <h2 className={`text-4xl font-bold mb-3 ${getTextColor()}`}>
                             {title}
                         </h2>
-                        <div className="h-1.5 w-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+                        <div className={`h-1.5 w-24 bg-gradient-to-r ${getGradient()} rounded-full`}></div>
                     </div>
 
                     <div className="space-y-5 mb-8">
-                        <p className="text-gray-700 leading-relaxed text-lg">{content1}</p>
-                        <p className="text-gray-700 leading-relaxed text-lg">{content2}</p>
+                        <p className={`leading-relaxed text-lg ${getSecondaryTextColor()}`}>{content1}</p>
+                        <p className={`leading-relaxed text-lg ${getSecondaryTextColor()}`}>{content2}</p>
                     </div>
 
                     {/* Feature Points */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-                        <div className="flex items-start gap-3 p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className={`flex items-start gap-3 p-4 ${getCardBackground()} rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border ${getBorderColor()}`}>
                             <div className="flex-shrink-0 mt-1">
-                                <div className="p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                                    {icon1}
+                                <div className={`p-3 bg-gradient-to-br ${theme === 'light' ? 'from-blue-50 to-blue-100' : 'from-blue-900/20 to-blue-800/20'} rounded-lg`}>
+                                    {React.cloneElement(icon1 as React.ReactElement, {
+                                        className: `w-6 h-6 ${theme === 'light' ? 'text-blue-600' : 'text-blue-400'}`
+                                    })}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900 text-base mb-1 leading-tight">
+                                <h4 className={`font-bold text-base mb-1 leading-tight ${getTextColor()}`}>
                                     {icontitle1}
                                 </h4>
-                                <p className="text-gray-600 text-sm leading-tight">
+                                <p className={`text-sm leading-tight ${getSecondaryTextColor()}`}>
                                     {iconp1}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex items-start gap-3 p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                        <div className={`flex items-start gap-3 p-4 ${getCardBackground()} rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border ${getBorderColor()}`}>
                             <div className="flex-shrink-0 mt-1">
-                                <div className="p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                                    {icon2}
+                                <div className={`p-3 bg-gradient-to-br ${theme === 'light' ? 'from-blue-50 to-blue-100' : 'from-blue-900/20 to-blue-800/20'} rounded-lg`}>
+                                    {React.cloneElement(icon2 as React.ReactElement, {
+                                        className: `w-6 h-6 ${theme === 'light' ? 'text-blue-600' : 'text-blue-400'}`
+                                    })}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900 text-base mb-1 leading-tight">
+                                <h4 className={`font-bold text-base mb-1 leading-tight ${getTextColor()}`}>
                                     {icontitle2}
                                 </h4>
-                                <p className="text-gray-600 text-sm leading-tight">
+                                <p className={`text-sm leading-tight ${getSecondaryTextColor()}`}>
                                     {iconp2}
                                 </p>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -101,12 +141,13 @@ const Section: React.FC<SectionProps> = ({
 }
 
 const FullPageSections = () => {
+    const { theme } = useThemeStore()
+
     const sections = [
         {
             img: aboutUs,
             icon1: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -121,7 +162,6 @@ const FullPageSections = () => {
             ),
             icon2: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -149,7 +189,6 @@ const FullPageSections = () => {
             img: mission,
             icon1: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -164,7 +203,6 @@ const FullPageSections = () => {
             ),
             icon2: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -192,7 +230,6 @@ const FullPageSections = () => {
             img: challenges,
             icon1: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -207,7 +244,6 @@ const FullPageSections = () => {
             ),
             icon2: (
                 <svg
-                    className="w-6 h-6 text-blue-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -234,7 +270,10 @@ const FullPageSections = () => {
     ]
 
     return (
-        <div className="scroll-smooth">
+        <div className="scroll-smooth" style={{
+            backgroundColor: themes[theme]?.colors?.background || '#ffffff',
+            color: themes[theme]?.colors?.text || (theme === 'light' ? '#000000' : '#ffffff')
+        }}>
             {sections.map((section, index) => (
                 <Section
                     key={index}

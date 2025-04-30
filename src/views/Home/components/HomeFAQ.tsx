@@ -1,32 +1,73 @@
 import React, { useState } from 'react';
 import { BiChevronDown } from 'react-icons/bi';
+import { useThemeStore } from '@/store/themeStore';
+import { themes } from '@/views/Home/themes/themeLoader';
 
-const FAQItem = ({ question, answer, isOpen, onClick }) => (
-  <div className="border-b border-indigo-900/10 last:border-0">
-    <button
-      onClick={onClick}
-      className={`w-full py-4 px-4 flex items-center justify-between text-left transition-all duration-300 rounded-lg ${isOpen ? 'bg-indigo-900/5' : 'hover:bg-indigo-900/5'}`}
-    >
-      <h3 className="text-lg font-medium text-gray-900 pr-4">{question}</h3>
-      <div className={`flex-shrink-0 ml-4 transition-all duration-300 ${isOpen ? 'rotate-180 text-indigo-600' : 'text-gray-500'}`}>
-        <BiChevronDown className="w-6 h-6" />
-      </div>
-    </button>
+const FAQItem = ({ question, answer, isOpen, onClick, theme }) => {
+  const currentTheme = themes[theme]?.colors || {};
+  
+  // Theme-based colors
+  const getBackgroundColor = () => {
+    if (theme === 'light') return 'bg-indigo-900/5';
+    if (theme === 'dark') return 'bg-white/10';
+    return `bg-[${currentTheme.accent}]/10`;
+  };
 
-    <div
-      className={`overflow-hidden mt-3 transition-all duration-500 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-    >
-      <div className="px-4 pb-4 text-gray-600">
-        <div className="bg-indigo-50/50 backdrop-blur-sm p-4 rounded-lg border border-indigo-100">
-          {answer}
+  const getTextColor = () => {
+    return theme === 'light' ? 'text-gray-900' : 'text-white';
+  };
+
+  const getSecondaryTextColor = () => {
+    return theme === 'light' ? 'text-gray-600' : 'text-gray-300';
+  };
+
+  const getBorderColor = () => {
+    if (theme === 'light') return 'border-indigo-900/10';
+    if (theme === 'dark') return 'border-white/20'; // Changed to white/20 for dark mode
+    return `border-[${currentTheme.accent}]/10`;
+  };
+
+  const getAccentColor = () => {
+    if (theme === 'light') return 'text-indigo-600';
+    if (theme === 'dark') return 'text-blue-400';
+    return `text-[${currentTheme.accent}]`;
+  };
+
+  const getCardBackground = () => {
+    if (theme === 'light') return 'bg-indigo-50/50 border-indigo-100';
+    if (theme === 'dark') return 'bg-gray-800/50 border-white/20'; // Added white border for dark mode
+    return `bg-[${currentTheme.cardBackground}]/50 border-[${currentTheme.border}]`;
+  };
+
+  return (
+    <div className={`border-b ${getBorderColor()} last:border-0`}>
+      <button
+        onClick={onClick}
+        className={`w-full py-4 px-4 flex items-center justify-between text-left transition-all duration-300 rounded-lg ${isOpen ? getBackgroundColor() : 'hover:' + getBackgroundColor()}`}
+      >
+        <h3 className={`text-lg font-medium ${getTextColor()} pr-4`}>{question}</h3>
+        <div className={`flex-shrink-0 ml-4 transition-all duration-300 ${isOpen ? `rotate-180 ${getAccentColor()}` : 'text-gray-500'}`}>
+          <BiChevronDown className="w-6 h-6" />
+        </div>
+      </button>
+
+      <div
+        className={`overflow-hidden mt-3 transition-all duration-500 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+      >
+        <div className={`px-4 pb-4 ${getSecondaryTextColor()}`}>
+          <div className={`p-4 rounded-lg border ${getCardBackground()} backdrop-blur-sm`}>
+            {answer}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(0);
+  const { theme } = useThemeStore();
+  const currentTheme = themes[theme]?.colors || {};
 
   const faqData = [
     {
@@ -75,19 +116,44 @@ const FAQ = () => {
     },
   ];
 
+  // Theme-based colors
+  const getGradient = () => {
+    if (theme === 'light') return 'from-indigo-500 to-purple-500';
+    if (theme === 'dark') return 'from-blue-400 to-purple-400';
+    return currentTheme.gradient || 'from-indigo-500 to-purple-500';
+  };
+
+  const getContainerBackground = () => {
+    if (theme === 'light') return 'bg-white/90';
+    if (theme === 'dark') return 'bg-gray-900/90';
+    return `bg-[${currentTheme.background}]/90`;
+  };
+
+  const getContainerBorder = () => {
+    if (theme === 'light') return 'border border-gray-200';
+    if (theme === 'dark') return 'border border-white/20'; // White border for dark mode
+    return `border border-[${currentTheme.border}]`;
+  };
+
   return (
-    <div className="min-h-screen  py-20 px-4 sm:px-6 lg:px-8">
+    <div 
+      className="min-h-screen py-20 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundColor: currentTheme.background || '#ffffff',
+        color: currentTheme.text || (theme === 'light' ? '#000000' : '#ffffff')
+      }}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Frequently Asked Questions
-                    </h1>
-                    <div className="h-1 w-24 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full" />
-                </div>
+        <div className="text-center mb-12">
+          <h1 className={`text-4xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+            Frequently Asked Questions
+          </h1>
+          <div className={`h-1 w-24 bg-gradient-to-r ${getGradient()} mx-auto rounded-full`} />
+        </div>
 
         {/* FAQ Items */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden p-1">
+        <div className={`${getContainerBackground()} ${getContainerBorder()} backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden p-1`}>
           <div className="p-6 space-y-2">
             {faqData.map((faq, index) => (
               <FAQItem
@@ -96,13 +162,11 @@ const FAQ = () => {
                 answer={faq.ans}
                 isOpen={index === openIndex}
                 onClick={() => setOpenIndex(index === openIndex ? -1 : index)}
+                theme={theme}
               />
             ))}
           </div>
         </div>
-
-        
-        
       </div>
     </div>
   );

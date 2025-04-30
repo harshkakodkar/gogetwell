@@ -5,12 +5,12 @@ import sharedRoutes from './sharedRoutes'  // 👈 Import the shared routes here
 import type { Routes } from '@/@types/routes'
 
 export const publicRoutes: Routes = [
-    ...sharedRoutes,  // 👈 Add shared routes for public
+    ...sharedRoutes, 
     ...authRoute,
 ]
 
 export const protectedRoutes: Routes = [
-    ...sharedRoutes,  // 👈 Add shared routes for protected
+    ...sharedRoutes,  
     {
         key: 'singleMenuItem',
         path: '/single-menu-view',

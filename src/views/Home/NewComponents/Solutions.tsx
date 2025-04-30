@@ -10,6 +10,8 @@ import {
   FaMoneyCheckAlt, 
   FaChartLine 
 } from 'react-icons/fa';
+import { useThemeStore } from '@/store/themeStore';
+import { themes } from '@/views/Home/themes/themeLoader';
 
 interface Card {
   title: string;
@@ -19,6 +21,28 @@ interface Card {
 }
 
 const Solutions: React.FC = () => {
+  const { theme } = useThemeStore();
+  const currentTheme = themes[theme]?.colors || {};
+
+  // Theme-based colors
+  const getCardBackground = () => {
+    if (theme === 'light') return 'bg-white/80 hover:bg-white/90';
+    if (theme === 'dark') return 'bg-gray-800/80 hover:bg-gray-800/90';
+    return `bg-[${currentTheme.background}]/80 hover:bg-[${currentTheme.background}]/90`;
+  };
+
+  const getCardBorder = () => {
+    return theme === 'dark' ? 'border border-white/20' : 'border border-transparent';
+  };
+
+  const getTextColor = () => {
+    return theme === 'light' ? 'text-gray-800' : 'text-white';
+  };
+
+  const getSecondaryTextColor = () => {
+    return theme === 'light' ? 'text-gray-600' : 'text-gray-300';
+  };
+
   const cards: Card[] = [
     {
       title: 'Custom AI-Powered Website',
@@ -77,25 +101,37 @@ const Solutions: React.FC = () => {
   ];
 
   return (
-    <div className="py-16 px-4 md:px-20 min-h-screen">
+    <div 
+      className="py-16 px-4 md:px-20 min-h-screen"
+      style={{
+        backgroundColor: currentTheme.background || '#ffffff',
+        color: currentTheme.text || (theme === 'light' ? '#000000' : '#ffffff')
+      }}
+    >
       <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Our Comprehensive Solutions
-          </h2>
-          <div className="h-1 w-24 bg-primary mx-auto rounded-full"></div>
-        </div>
+        <h2 className={`text-4xl font-bold mb-4 ${getTextColor()}`}>
+          Our Comprehensive Solutions
+        </h2>
+        <div className={`h-1 w-24 mx-auto rounded-full ${
+          theme === 'light' ? 'bg-blue-600' : 'bg-white'
+        }`}></div>
+      </div>
 
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((card, index) => (
           <div
             key={index}
-            className={`bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:bg-white/90 ${card.hoverColor}`}
+            className={`${getCardBackground()} ${getCardBorder()} backdrop-blur-lg rounded-3xl p-8 shadow-2xl transform transition-all duration-300 hover:scale-105 ${card.hoverColor}`}
           >
             <div className="flex items-center justify-center">
               {card.icon}
             </div>
-            <h3 className="text-xl font-bold mb-4 text-center text-gray-800 mt-4">{card.title}</h3>
-            <p className="text-gray-600 text-center">{card.desc}</p>
+            <h3 className={`text-xl font-bold mb-4 text-center mt-4 ${getTextColor()}`}>
+              {card.title}
+            </h3>
+            <p className={`text-center ${getSecondaryTextColor()}`}>
+              {card.desc}
+            </p>
           </div>
         ))}
       </div>
